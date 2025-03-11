@@ -21,11 +21,12 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
-      - name: Buat File Credential Google Sheets
+      - name: Install Chrome
         run: |
-          echo "$GSPREAD_CREDENTIALS" > spreadsheet.json
-        env:
-          GSPREAD_CREDENTIALS: ${{ secrets.GSPREAD_CREDENTIALS }}
+          sudo apt update
+          sudo apt install -y google-chrome-stable
 
       - name: Jalankan Scraper
         run: python final.py
+        env:
+          GSPREAD_CREDENTIALS: ${{ secrets.GSPREAD_CREDENTIALS }}
