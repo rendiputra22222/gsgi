@@ -1,0 +1,31 @@
+name: Scraping Otomatis
+
+on:
+  schedule:
+    - cron: "0 * * * *"  # Jalan tiap 1 jam
+  workflow_dispatch:  # Supaya bisa dijalankan manual juga
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Buat File Credential Google Sheets
+        run: |
+          echo "$GSPREAD_CREDENTIALS" > spreadsheet.json
+        env:
+          GSPREAD_CREDENTIALS: ${{ secrets.GSPREAD_CREDENTIALS }}
+
+      - name: Jalankan Scraper
+        run: python final.py
