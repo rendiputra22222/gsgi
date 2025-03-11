@@ -10,9 +10,17 @@ import pandas as pd
 
 # Setup Selenium WebDriver
 chrome_options = Options()
-chrome_options.add_argument("--headless")  # Tidak menampilkan browser
+chrome_options.add_argument("--headless")
 chrome_options.add_argument("--disable-gpu")
 chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")  # Kurangi penggunaan memori
+chrome_options.add_argument("start-maximized")  
+chrome_options.add_argument("disable-infobars")  
+chrome_options.add_argument("--disable-blink-features=AutomationControlled")  # Hindari deteksi bot
+chrome_options.add_argument(
+    "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36"
+)  # Gunakan User-Agent Chrome asli
+
 
 # Gunakan webdriver-manager agar otomatis download ChromeDriver
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
