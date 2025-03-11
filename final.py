@@ -1,11 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import pandas as pd
-import time
+from webdriver_manager.chrome import ChromeDriverManager
 
 # Setup Selenium WebDriver
 chrome_options = Options()
@@ -13,9 +9,8 @@ chrome_options.add_argument("--headless")  # Tidak menampilkan browser
 chrome_options.add_argument("--disable-gpu")
 chrome_options.add_argument("--no-sandbox")
 
-# Path ke ChromeDriver (sesuaikan dengan lokasi di komputer)
-service = Service("C:/WebDriver/chromedriver.exe")
-driver = webdriver.Chrome(service=service, options=chrome_options)
+# Gunakan webdriver-manager agar otomatis download ChromeDriver
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
 PASARAN_DENGAN_SUB = [
     "BRUNEI", "CHELSEA", "TOTO MACAU", "HUAHIN", "KING KONG4D",
@@ -120,7 +115,14 @@ from google.oauth2.service_account import Credentials
 # Koneksi ke Google Sheets
 print("🔄 Menghubungkan ke Google Spreadsheet")
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = Credentials.from_service_account_file("spreadsheet-453316-e366edfc949d.json", scopes=scope)
+
+import json
+import os
+
+# Ambil credential dari GitHub Secrets
+service_account_info = json.loads(os.getenv("GSPREAD_CREDENTIALS"))
+creds = Credentials.from_service_account_info(service_account_info, scopes=scope)
+
 client = gspread.authorize(creds)
 
 # Buka spreadsheet dan worksheet
